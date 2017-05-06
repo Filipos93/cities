@@ -2,9 +2,7 @@ var express = require('express');
 var app = express();
 
 app.get('/', function(req, res){
-	res.send("Hello espress.js");
+	res.send("Hello espress.js\n");
 });
 
-app.listen(8000, function(){
-	console.log("Listening on port 8000");
-})
+module.exports = app;
