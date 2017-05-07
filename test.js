@@ -80,6 +80,13 @@ describe('Creating new cities', function(){
 		.expect(/Springfield/i, done);
 	});
 
+	it('Validates city name and description', function(done){
+		req(app)
+		.post('/cities')
+		.send('name=&description=')
+		.expect(400, done);
+	});
+
 });
 
 describe('Deleting a city', function(){

@@ -19,11 +19,19 @@ app.get('/cities', function(req, res){
 });
 
 app.post('/cities', urlencode, function(req, res){
+	
 	var newCity = req.body;
-	client.hset('cities', newCity.name, newCity.description, function(error){
-		if(error) throw error;
-		res.status(201).json(newCity.name);
-	});
+	
+	if(newCity.name && newCity.description){
+		
+		client.hset('cities', newCity.name, newCity.description, function(error){
+			if(error) throw error;
+			res.status(201).json(newCity.name);
+		});
+	}else{
+		res.sendStatus(400);
+	}
+	
 });
 
 app.delete('/cities/:name', function(req, res){
