@@ -1,5 +1,11 @@
 var req = require('supertest');
-var app = require('./app')
+var app = require('./app');
+
+var redis = require('redis');
+var client = redis.createClient();
+client.select('test'.length);
+client.flushdb();
+
 
 describe('Requests to root path', function(){
 
@@ -52,7 +58,7 @@ describe('Listing cities on /cities', function(){
 
 		req(app)
 		.get('/cities')
-		.expect(JSON.stringify(['Lotopia', 'Caspiana', 'Indigo']), done);
+		.expect(JSON.stringify([]), done);
 
 	});
 
@@ -72,6 +78,26 @@ describe('Creating new cities', function(){
 		.post('/cities')
 		.send('name=Springfield&description=where+the+simpsons+live')
 		.expect(/Springfield/i, done);
+	});
+
+});
+
+describe('Deleting a city', function(){
+
+	before(function(){
+		client.hset('cities', 'Banana', 'a tasty fruit');
+	});
+
+	after(function(){
+		client.flushdb();
+	});
+
+	it('Returns a 204 status code', function(done){
+
+		req(app)
+		.delete('/cities/Banana')
+		.expect(204, done);
+
 	});
 
 });
